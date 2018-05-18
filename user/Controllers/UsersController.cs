@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Users.Models;
+using User.Models;
 using user.Models;
 
 namespace user.Controllers
@@ -16,6 +16,8 @@ namespace user.Controllers
     {
         private readonly userContext _context;
 
+        
+
         public UsersController(userContext context)
         {
             _context = context;
@@ -23,7 +25,7 @@ namespace user.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public IEnumerable<Users.Models.Users> GetUsers()
+        public IEnumerable<User.Models.User> GetUsers()
         {
             return _context.Users;
         }
@@ -49,7 +51,7 @@ namespace user.Controllers
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
-        public IActionResult PutUsers([FromRoute] int id, [FromBody] Users.Models.Users users)
+        public IActionResult PutUsers([FromRoute] int id, [FromBody] User.Models.User users)
         {
             if (!ModelState.IsValid)
             {
@@ -84,17 +86,44 @@ namespace user.Controllers
 
         // POST: api/Users
         [HttpPost]
-        public IActionResult PostUsers([FromBody] Users.Models.Users users)
+        public IActionResult PostUsers([FromBody] User.Models.User user)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Users.Add(users);
-            _context.SaveChanges();
 
-            return CreatedAtAction("GetUsers", new { id = users.Id }, users);
+
+            var _user = _context.Users.SingleOrDefault(m => m.UserName == user.UserName);
+
+            if (user != null)
+            {
+                if (_user == null)
+                {
+                    _context.Users.Add(user);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    if (_user.UserName == user.UserName)
+                    {
+                        return BadRequest("UserName already exists");
+                    }
+                }
+            }
+            else
+            {
+                return BadRequest("Post body invalid");
+            }
+
+        
+         
+
+
+
+
+            return CreatedAtAction("GetUsers", new { id = user.Id }, user);
         }
 
         // DELETE: api/Users/5

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Users.Models;
+using User.Models;
 
 namespace user.Models
 {
@@ -14,6 +14,6 @@ namespace user.Models
         {
         }
 
-        public DbSet<Users.Models.Users> Users { get; set; }
+        public DbSet<User.Models.User> Users { get; set; }
     }
 }

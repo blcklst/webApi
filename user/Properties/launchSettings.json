@@ -19,11 +19,11 @@
     "user": {
       "commandName": "Project",
       "launchBrowser": false,
-      "launchUrl": "api/values",
+      "launchUrl": "api/users",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:63575/"
+      "applicationUrl": "http://localhost:63000/"
     }
   }
 }
