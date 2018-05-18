@@ -97,33 +97,35 @@ namespace user.Controllers
 
             var _user = _context.Users.SingleOrDefault(m => m.UserName == user.UserName);
 
-            if (user != null)
+            try
             {
-                if (_user == null)
+                if (user != null)
                 {
-                    _context.Users.Add(user);
-                    _context.SaveChanges();
+                    if (_user == null)
+                    {
+                        _context.Users.Add(user);
+                        _context.SaveChanges();
+                    }
+                    else
+                    {
+                        if (_user.UserName == user.UserName)
+                        {
+                            return BadRequest("UserName " + user.UserName + " already exists");
+                        }
+                    }
                 }
                 else
                 {
-                    if (_user.UserName == user.UserName)
-                    {
-                        return BadRequest("UserName already exists");
-                    }
+                    return BadRequest(new { message = "Error", info="Bad Request"});
                 }
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest("Post body invalid");
+                return BadRequest(new { message = "Error", info = ex });
             }
+       
 
-        
-         
-
-
-
-
-            return CreatedAtAction("GetUsers", new { id = user.Id }, user);
+            return Ok(user);
         }
 
         // DELETE: api/Users/5
@@ -138,13 +140,13 @@ namespace user.Controllers
             var users = _context.Users.SingleOrDefault(m => m.Id == id);
             if (users == null)
             {
-                return NotFound();
+                return NotFound( new { message = "User doesn't exist on database"});
             }
 
             _context.Users.Remove(users);
             _context.SaveChanges();
 
-            return Ok(users);
+            return Ok( new { message = "Good job!", info="User has been deleted"});
         }
 
         private bool UsersExists(int id)
